@@ -1,4 +1,7 @@
 let useCelsius = false;
+let lastLocation = '';
+let lastConditions = '';
+
 
 async function getWeather(location) {
     const apiKey = 'NNUE63CLCTQS7ATGQZWC9KEGF';
@@ -8,33 +11,33 @@ async function getWeather(location) {
     try {
         const response = await fetch(url);
         const data = await response.json();
-        console.log(data);
 
-        //extract important data
         const locationName = data.address;
         const today = data.days[0];
         const temperature = today.temp;
         const conditions = today.conditions;
         const precipChance = today.precipprob;
 
-        const unit = useCelsius ? '°C' : '°F';
-        document.getElementById('temperature').textContent = `Temperature: ${temperature}${unit}`;
-
-
-        //update page content
         document.getElementById('location').textContent = `Weather for ${locationName}`;
+        document.getElementById('temperature').textContent = `Temperature: ${temperature}°${useCelsius ? 'C' : 'F'}`;
         document.getElementById('conditions').textContent = `Conditions: ${conditions}`;
         document.getElementById('precipitation').textContent = `Chance of rain: ${precipChance}%`;
 
-        getWeatherGif(locationName);
+        document.getElementById('weatherGif').classList.remove('hidden');
+        document.getElementById('unitToggle').classList.remove('hidden');
 
+        // Only fetch a new GIF if the location changed
+        if (location !== lastLocation) {
+            getWeatherGif(locationName);
+            lastLocation = location;
+            lastConditions = conditions;
+        }
 
     } catch (error) {
-        console.error('Error fetching weather data', error);
+        console.error('Error fetching weather data:', error);
     }
-
-
 }
+
 
 
 document.getElementById('searchBtn').addEventListener('click', ()=> {

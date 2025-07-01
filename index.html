@@ -5,16 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
     <link rel ="stylesheet" href = 'styles.css'> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    <input type = 'text' id="locationInput" placeholder="Enter a location">
-    <button id = 'searchBtn'>Get Weather</button>
-    <h2 id = 'location'></h2>
-    <p id = 'temperature'></p>
-    <button id = 'unitToggle'>Show in Celcius</button>
-    <p id = 'conditions'></p>
-    <p id = 'precipitation'></p>
-    <img id = 'weatherGif' src = '' alt = 'Weather Gif'>
+    <div id="weatherCard">
+    <div id="searchSection">
+        <input type="text" id="locationInput" placeholder="Enter a location">
+        <button id="searchBtn">Get Weather</button>
+    </div>
+
+    <h2 id="location"></h2>
+    <p id="temperature"></p>
+    <p id="conditions"></p>
+    <p id="precipitation"></p>
+
+    <img id="weatherGif" class="hidden" src="" alt="Weather GIF">
+    <button id="unitToggle" class="hidden">Show in Celsius</button>
+</div>
+
+
     <script src = 'script.js'></script>
 </body>
 </html>
