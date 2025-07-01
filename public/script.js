@@ -26,7 +26,7 @@ async function getWeather(location) {
 
         // Only fetch a new GIF if location changed
         if (location !== lastLocation) {
-            getWeatherGif(conditions);
+            getWeatherGif(location);
             lastLocation = location;
             lastConditions = conditions;
         }
