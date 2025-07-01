@@ -2,11 +2,9 @@ let useCelsius = false;
 let lastLocation = '';
 let lastConditions = '';
 
-
 async function getWeather(location) {
-    const apiKey = 'NNUE63CLCTQS7ATGQZWC9KEGF';
     const unitGroup = useCelsius ? 'metric' : 'us';
-    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=${unitGroup}&key=${apiKey}`;
+    const url = `/api/weather?location=${encodeURIComponent(location)}&unitGroup=${unitGroup}`;
 
     try {
         const response = await fetch(url);
@@ -26,9 +24,9 @@ async function getWeather(location) {
         document.getElementById('weatherGif').classList.remove('hidden');
         document.getElementById('unitToggle').classList.remove('hidden');
 
-        // Only fetch a new GIF if the location changed
+        // Only fetch a new GIF if location changed
         if (location !== lastLocation) {
-            getWeatherGif(locationName);
+            getWeatherGif(conditions);
             lastLocation = location;
             lastConditions = conditions;
         }
@@ -38,40 +36,38 @@ async function getWeather(location) {
     }
 }
 
-
-
-document.getElementById('searchBtn').addEventListener('click', ()=> {
+document.getElementById('searchBtn').addEventListener('click', () => {
     const location = document.getElementById('locationInput').value;
 
-    if(location.trim() !==""){
-        getWeather(location)
+    if (location.trim() !== "") {
+        getWeather(location);
     } else {
-        alert("Please enter a location")
+        alert("Please enter a location");
     }
 });
 
-
-document.getElementById('unitToggle').addEventListener('click', ()=> {
+document.getElementById('unitToggle').addEventListener('click', () => {
     useCelsius = !useCelsius;
 
     const btn = document.getElementById('unitToggle');
     btn.textContent = useCelsius ? 'Show in Fahrenheit' : 'Show in Celsius';
-    const location = document.getElementById('locationInput').value || 'Los Angeles';
-    getWeather(location);
 
-})
+    const location = document.getElementById('locationInput').value || lastLocation;
+    if (location.trim() !== "") {
+        getWeather(location);
+    }
+});
 
 async function getWeatherGif(searchTerm) {
-    const apiKey = '37Cr1UDDTOTzhAiJKOWPmQcocT7vqwSZ'
-    const url = `https://api.giphy.com/v1/gifs/translate?api_key=${apiKey}&s=${encodeURIComponent(searchTerm)}`;
+    const url = `/api/gif?search=${encodeURIComponent(searchTerm)}`;
 
     try {
         const response = await fetch(url);
         const data = await response.json();
 
         const gifUrl = data.data.images.original.url;
-        document.getElementById('weatherGif').src = gifUrl
+        document.getElementById('weatherGif').src = gifUrl;
     } catch (error) {
-        console.log('Error fetching GIF:', error);
+        console.error('Error fetching GIF:', error);
     }
 }
