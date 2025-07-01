@@ -26,6 +26,8 @@ async function getWeather(location) {
         document.getElementById('conditions').textContent = `Conditions: ${conditions}`;
         document.getElementById('precipitation').textContent = `Chance of rain: ${precipChance}%`;
 
+        getWeatherGif(locationName);
+
 
     } catch (error) {
         console.error('Error fetching weather data', error);
@@ -56,3 +58,17 @@ document.getElementById('unitToggle').addEventListener('click', ()=> {
 
 })
 
+async function getWeatherGif(searchTerm) {
+    const apiKey = '37Cr1UDDTOTzhAiJKOWPmQcocT7vqwSZ'
+    const url = `https://api.giphy.com/v1/gifs/translate?api_key=${apiKey}&s=${encodeURIComponent(searchTerm)}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const gifUrl = data.data.images.original.url;
+        document.getElementById('weatherGif').src = gifUrl
+    } catch (error) {
+        console.log('Error fetching GIF:', error);
+    }
+}
