@@ -1,6 +1,10 @@
+let useCelsius = false;
+
 async function getWeather(location) {
     const apiKey = 'NNUE63CLCTQS7ATGQZWC9KEGF';
-    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=us&key=${apiKey}`;
+    const unitGroup = useCelsius ? 'metric' : 'us';
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=${unitGroup}&key=${apiKey}`;
+
     try {
         const response = await fetch(url);
         const data = await response.json();
@@ -13,9 +17,12 @@ async function getWeather(location) {
         const conditions = today.conditions;
         const precipChance = today.precipprob;
 
+        const unit = useCelsius ? '°C' : '°F';
+        document.getElementById('temperature').textContent = `Temperature: ${temperature}${unit}`;
+
+
         //update page content
         document.getElementById('location').textContent = `Weather for ${locationName}`;
-        document.getElementById('temperature').textContent = `Temperature: ${temperature}°F`;
         document.getElementById('conditions').textContent = `Conditions: ${conditions}`;
         document.getElementById('precipitation').textContent = `Chance of rain: ${precipChance}%`;
 
@@ -37,3 +44,15 @@ document.getElementById('searchBtn').addEventListener('click', ()=> {
         alert("Please enter a location")
     }
 });
+
+
+document.getElementById('unitToggle').addEventListener('click', ()=> {
+    useCelsius = !useCelsius;
+
+    const btn = document.getElementById('unitToggle');
+    btn.textContent = useCelsius ? 'Show in Fahrenheit' : 'Show in Celsius';
+    const location = document.getElementById('locationInput').value || 'Los Angeles';
+    getWeather(location);
+
+})
+
